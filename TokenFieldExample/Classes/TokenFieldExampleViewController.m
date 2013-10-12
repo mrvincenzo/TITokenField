@@ -34,20 +34,14 @@
 	[_tokenFieldView.tokenField setTokenizingCharacters:[NSCharacterSet characterSetWithCharactersInString:@",;."]]; // Default is a comma
     [_tokenFieldView.tokenField setPromptText:@"To:"];
 	[_tokenFieldView.tokenField setPlaceholder:@"Type a name"];
+  
+  [_tokenFieldView setMaxNumberOfLines:2];
 	
 	UIButton * addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
 	[addButton addTarget:self action:@selector(showContactsPicker:) forControlEvents:UIControlEventTouchUpInside];
 	[_tokenFieldView.tokenField setRightView:addButton];
 	[_tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldChangedEditing:) forControlEvents:UIControlEventEditingDidBegin];
 	[_tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldChangedEditing:) forControlEvents:UIControlEventEditingDidEnd];
-	
-	_messageView = [[UITextView alloc] initWithFrame:_tokenFieldView.contentView.bounds];
-	[_messageView setScrollEnabled:NO];
-	[_messageView setAutoresizingMask:UIViewAutoresizingNone];
-	[_messageView setDelegate:self];
-	[_messageView setFont:[UIFont systemFontOfSize:15]];
-	[_messageView setText:@"Some message. The whole view resizes as you type, not just the text view."];
-	[_tokenFieldView.contentView addSubview:_messageView];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -100,7 +94,6 @@
 - (void)resizeViews {
     int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
 	[_tokenFieldView setFrame:((CGRect){_tokenFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[_messageView setFrame:_tokenFieldView.contentView.bounds];
 }
 
 - (BOOL)tokenField:(TITokenField *)tokenField willRemoveToken:(TIToken *)token {
@@ -118,29 +111,6 @@
 }
 
 - (void)tokenFieldFrameDidChange:(TITokenField *)tokenField {
-	[self textViewDidChange:_messageView];
-}
-
-- (void)textViewDidChange:(UITextView *)textView {
-	
-	CGFloat oldHeight = _tokenFieldView.frame.size.height - _tokenFieldView.tokenField.frame.size.height;
-	CGFloat newHeight = textView.contentSize.height + textView.font.lineHeight;
-	
-	CGRect newTextFrame = textView.frame;
-	newTextFrame.size = textView.contentSize;
-	newTextFrame.size.height = newHeight;
-	
-	CGRect newFrame = _tokenFieldView.contentView.frame;
-	newFrame.size.height = newHeight;
-	
-	if (newHeight < oldHeight){
-		newTextFrame.size.height = oldHeight;
-		newFrame.size.height = oldHeight;
-	}
-		
-	[_tokenFieldView.contentView setFrame:newFrame];
-	[textView setFrame:newTextFrame];
-	[_tokenFieldView updateContentSize];
 }
 
 @end

@@ -40,12 +40,8 @@
 - (BOOL)tokenField:(TITokenField *)tokenField willRemoveToken:(TIToken *)token;
 - (void)tokenField:(TITokenField *)tokenField didRemoveToken:(TIToken *)token;
 
-- (void)tokenField:(TITokenField *)tokenField didFinishSearch:(NSArray *)matches;
 - (NSString *)tokenField:(TITokenField *)tokenField displayStringForRepresentedObject:(id)object;
-- (NSString *)tokenField:(TITokenField *)tokenField searchResultStringForRepresentedObject:(id)object;
-- (NSString *)tokenField:(TITokenField *)tokenField searchResultSubtitleForRepresentedObject:(id)object;
-- (UITableViewCell *)tokenField:(TITokenField *)tokenField resultsTableView:(UITableView *)tableView cellForRepresentedObject:(id)object;
-- (CGFloat)tokenField:(TITokenField *)tokenField resultsTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 @interface TITokenFieldInternalDelegate : NSObject <UITextFieldDelegate>
@@ -56,16 +52,13 @@
 //==========================================================
 @interface TITokenFieldView : UIScrollView <UITableViewDelegate, UITableViewDataSource, TITokenFieldDelegate>
 @property (nonatomic, assign) BOOL showAlreadyTokenized;
-@property (nonatomic, assign) BOOL searchSubtitles;
-@property (nonatomic, assign) BOOL forcePickSearchResult;
 @property (nonatomic, readonly) TITokenField * tokenField;
 @property (nonatomic, readonly) UIView * separator;
-@property (nonatomic, readonly) UITableView * resultsTable;
-@property (nonatomic, readonly) UIView * contentView;
 @property (nonatomic, copy) NSArray * sourceArray;
 @property (weak, nonatomic, readonly) NSArray * tokenTitles;
 
-- (void)updateContentSize;
+- (void)setupSeparator:(UIView*)separator;
+- (void)setMaxNumberOfLines:(int)maxNumberOfLines;
 
 @end
 
@@ -87,7 +80,10 @@ typedef enum {
 @property (nonatomic, assign) BOOL resultsModeEnabled;
 @property (nonatomic, assign) BOOL removesTokensOnEndEditing;
 @property (nonatomic, readonly) int numberOfLines;
+@property (nonatomic, weak) UIButton * addButton;
 @property (nonatomic, strong) NSCharacterSet * tokenizingCharacters;
+
+- (CGFloat)getHeightWithNumberOfLines:(int)numberOfLines;
 
 - (void)addToken:(TIToken *)title;
 - (TIToken *)addTokenWithTitle:(NSString *)title;
@@ -100,8 +96,8 @@ typedef enum {
 
 - (void)tokenizeText;
 
-- (void)layoutTokensAnimated:(BOOL)animated;
-- (void)setResultsModeEnabled:(BOOL)enabled animated:(BOOL)animated;
+- (CGFloat)layoutTokensAnimated:(BOOL)animated;
+- (void)setResultsModeEnabled:(BOOL)enabled forcibly:(BOOL)forcibly animated:(BOOL)animated;
 
 // Pass nil to hide label
 - (void)setPromptText:(NSString *)aText;
