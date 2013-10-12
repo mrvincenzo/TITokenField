@@ -7,7 +7,6 @@
 //
 
 #import "TokenFieldExampleViewController.h"
-#import "Names.h"
 
 @interface TokenFieldExampleViewController (Private)
 - (void)resizeViews;
@@ -26,7 +25,6 @@
 	[self.navigationItem setTitle:@"Example"];
 	
 	_tokenFieldView = [[TITokenFieldView alloc] initWithFrame:self.view.bounds];
-	[_tokenFieldView setSourceArray:[Names listOfNames]];
 	[self.view addSubview:_tokenFieldView];
 	
 	[_tokenFieldView.tokenField setDelegate:self];
@@ -38,7 +36,6 @@
   [_tokenFieldView setMaxNumberOfLines:2];
 	
 	UIButton * addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-	[addButton addTarget:self action:@selector(showContactsPicker:) forControlEvents:UIControlEventTouchUpInside];
 	[_tokenFieldView.tokenField setRightView:addButton];
 	[_tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldChangedEditing:) forControlEvents:UIControlEventEditingDidBegin];
 	[_tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldChangedEditing:) forControlEvents:UIControlEventEditingDidEnd];
@@ -61,22 +58,6 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[self resizeViews];
-}
-
-- (void)showContactsPicker:(id)sender {
-	
-	// Show some kind of contacts picker in here.
-	// For now, here's how to add and customize tokens.
-	
-	NSArray * names = [Names listOfNames];
-	
-	TIToken * token = [_tokenFieldView.tokenField addTokenWithTitle:[names objectAtIndex:(arc4random() % names.count)]];
-	[token setAccessoryType:TITokenAccessoryTypeDisclosureIndicator];
-	// If the size of the token might change, it's a good idea to layout again.
-	[_tokenFieldView.tokenField layoutTokensAnimated:YES]; 
-	
-	NSUInteger tokenCount = _tokenFieldView.tokenField.tokens.count;
-	[token setTintColor:((tokenCount % 3) == 0 ? [TIToken redTintColor] : ((tokenCount % 2) == 0 ? [TIToken greenTintColor] : [TIToken blueTintColor]))];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {

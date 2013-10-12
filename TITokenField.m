@@ -29,7 +29,6 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @synthesize showAlreadyTokenized = _showAlreadyTokenized;
 @synthesize tokenField = _tokenField;
 @synthesize separator = _separator;
-@synthesize sourceArray = _sourceArray;
 
 #pragma mark Init
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -74,39 +73,37 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	[_separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:1]];
 	[self addSubview:_separator];
     
-	[self bringSubviewToFront:_separator];
 	[self bringSubviewToFront:_tokenField];
+	[self bringSubviewToFront:_separator];
 }
 
 #pragma mark mrvincenzo additions
 
+// separator should be of 1 point height
 - (void)setupSeparator:(UIView*)separator {
-    [separator removeFromSuperview];
-    _separator = separator;
+  [separator removeFromSuperview];
+  _separator = separator;
 	[self addSubview:_separator];
-    
-    [self updateSeparatorFrameOriginY];
+  
+  [self updateSeparatorFrameOriginY];
 }
 
 - (void)setMaxNumberOfLines:(int)maxNumberOfLines {
-    
-    _maxHeight = [_tokenField getHeightWithNumberOfLines:maxNumberOfLines];
-    [self setFrame:((CGRect){self.frame.origin, {self.frame.size.width, _maxHeight}})];
+  _maxHeight = [_tokenField getHeightWithNumberOfLines:maxNumberOfLines];
+  [self setFrame:((CGRect){self.frame.origin, {self.frame.size.width, _maxHeight}})];
 }
 
 - (void)updateSeparatorFrameOriginY {
-    
-    CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame)-1;
-    
-    [_separator setFrame:((CGRect){{_separator.frame.origin.x, tokenFieldBottom}, _separator.frame.size})];
-    
+  CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame)-1;
+  
+  [_separator setFrame:((CGRect){{_separator.frame.origin.x, tokenFieldBottom}, _separator.frame.size})];
+  
 	[self bringSubviewToFront:_separator];
 }
 
 #pragma mark Property Overrides
 
 - (void)setFrame:(CGRect)frame {
-	
   [super setFrame:((CGRect){frame.origin, {frame.size.width, MIN(frame.size.height, _maxHeight)}})];
 	
 	CGFloat width = frame.size.width;
@@ -591,7 +588,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
     [scrollView setScrollsToTop:!flag];
 		[scrollView setScrollEnabled:!flag];
 		
-    // mrvincenzo: don't ask!
+    // mrvincenzo: setting the content size and content offset correctly
     CGSize contentSize = scrollView.contentSize;
     CGFloat contentOffset;
     if (flag) {
