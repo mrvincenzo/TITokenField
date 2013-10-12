@@ -42,6 +42,8 @@
 
 - (NSString *)tokenField:(TITokenField *)tokenField displayStringForRepresentedObject:(id)object;
 
+- (void)tokenField:(TITokenField *)tokenField didChangeText:(NSString*)text;
+
 @end
 
 @interface TITokenFieldInternalDelegate : NSObject <UITextFieldDelegate>

@@ -366,6 +366,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
   }
   
   [self showOrHidePlaceHolderLabel];
+  
+  if ([self.delegate respondsToSelector:@selector(tokenField:didChangeText:)]){
+    [delegate tokenField:self didChangeText:self.text];
+  }
 }
 
 - (void) showOrHidePlaceHolderLabel {
