@@ -22,7 +22,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @end
 
 @implementation TITokenFieldView {
-    CGFloat _maxHeight;
+  CGFloat _maxHeight;
 }
 
 @dynamic delegate;
@@ -50,8 +50,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)setup {
-    _maxHeight = CGFLOAT_MAX;
-    
+  _maxHeight = CGFLOAT_MAX;
+  
+  self.delegate = self;
+  
 	[self setBackgroundColor:[UIColor clearColor]];
 	[self setDelaysContentTouches:YES];
 	[self setMultipleTouchEnabled:NO];
@@ -72,12 +74,17 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	_separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom-1, self.bounds.size.width, 1)];
 	[_separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:1]];
 	[self addSubview:_separator];
-    
+  
 	[self bringSubviewToFront:_tokenField];
 	[self bringSubviewToFront:_separator];
 }
 
 #pragma mark mrvincenzo additions
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  CGFloat originY = self.contentOffset.y + self.frame.size.height-1;
+  [_separator setFrame:((CGRect){{_separator.frame.origin.x, originY}, _separator.frame.size})];
+}
 
 // separator should be of 1 point height
 - (void)setupSeparator:(UIView*)separator {
@@ -95,7 +102,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 
 - (void)updateSeparatorFrameOriginY {
   CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame)-1;
-  
+    
   [_separator setFrame:((CGRect){{_separator.frame.origin.x, tokenFieldBottom}, _separator.frame.size})];
   
 	[self bringSubviewToFront:_separator];
@@ -159,6 +166,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)tokenFieldFrameDidChange:(TITokenField *)field {
+//  [self setFrame:((CGRect){self.frame.origin, {_separator.frame.size.width, MIN(field.frame.size.height, _maxHeight)}})];
 }
 
 #pragma mark Results Methods

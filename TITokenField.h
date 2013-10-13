@@ -52,7 +52,7 @@
 //==========================================================
 #pragma mark - TITokenFieldView -
 //==========================================================
-@interface TITokenFieldView : UIScrollView <UITableViewDelegate, UITableViewDataSource, TITokenFieldDelegate>
+@interface TITokenFieldView : UIScrollView <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, TITokenFieldDelegate>
 @property (nonatomic, assign) BOOL showAlreadyTokenized;
 @property (nonatomic, readonly) TITokenField * tokenField;
 @property (nonatomic, readonly) UIView * separator;
